@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\..\Debug\Bin\</OutputPath>
+    <OutputPath>Debug\Bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -84,6 +84,15 @@
     <Compile Include="Helpers\EasyVerifyHelper.cs" />
     <Compile Include="Helpers\WinformHelper.cs" />
     <Compile Include="Helpers\XmlHelper.cs" />
+    <Compile Include="Loading\LoadingLayer.cs" />
+    <Compile Include="Loading\LoadingComponent.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Properties\Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
     <Compile Include="Winform\LogForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -117,12 +126,18 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Properties\Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Winform\LogForm.resx">
       <DependentUpon>LogForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Nuget\Icon.png" />
+    <None Include="Resources\loading.gif" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

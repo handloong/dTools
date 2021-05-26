@@ -141,13 +141,21 @@
 
         private static Assembly GetAssembly(string dllName, string folderPath)
         {
-            //采用字节流转换.避免dll被占用
+
             string path;
             if (folderPath == null)
                 path = string.Format(@"{0}\{1}", AppDomain.CurrentDomain.BaseDirectory, dllName);
             else
                 path = string.Format(@"{0}\{1}\{2}", AppDomain.CurrentDomain.BaseDirectory, folderPath, dllName);
-            return Assembly.Load(File.ReadAllBytes(path));
+
+            //https://blog.csdn.net/weixin_30849591/article/details/98642298
+
+
+            //采用字节流转换.避免dll被占用
+            //return Assembly.Load(File.ReadAllBytes(path));
+
+            //依赖调用项目也要加载
+            return Assembly.LoadFrom(path);
         }
         #endregion
 
