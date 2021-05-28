@@ -59,6 +59,7 @@
     <Compile Include="Helpers\CmdHelper.cs" />
     <Compile Include="Helpers\Config.cs" />
     <Compile Include="Helpers\INIHelper.cs" />
+    <Compile Include="Helpers\PrimaryScreen.cs" />
     <Compile Include="Helpers\RetryHelper.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Entity\WindowInfoEntity.cs" />

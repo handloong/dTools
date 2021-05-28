@@ -27,6 +27,18 @@ namespace dTools.Extensions
         }
 
         /// <summary>
+        /// 跨线程访问
+        /// </summary>
+        /// <param name="this"></param>
+        /// <param name="action"></param>
+        public static void InvokeExt(this Control @this, Action action)
+        {
+            if (@this.InvokeRequired)
+                @this.BeginInvoke(action);
+            else
+                action.Invoke();
+        }
+        /// <summary>
         /// 向RichTextBox添加文字(支持跨线程访问)
         /// </summary>
         /// <param name="this">RichTextBox</param>
