@@ -29,6 +29,9 @@ namespace dTools
 
         [DllImport("KERNEL32.DLL ", EntryPoint = "GetPrivateProfileSection", CharSet = CharSet.Ansi)]
         private static extern int GetPrivateProfileSection(string lpAppName, byte[] lpReturnedString, int nSize, string filePath);
+
+        private static int MAX_BUFFER = 1024 * 1024 * 10;
+
         #endregion
 
         #region 读写操作（字符串）
@@ -67,7 +70,6 @@ namespace dTools
         /// <returns>-1:没有节信息，0:正常</returns>
         public static int GetAllSectionNames(out string[] sections, string path)
         {
-            int MAX_BUFFER = 32767;
             IntPtr pReturnedString = Marshal.AllocCoTaskMem(MAX_BUFFER);
             int bytesReturned = GetPrivateProfileSectionNames(pReturnedString, MAX_BUFFER, path);
             if (bytesReturned == 0)
@@ -89,7 +91,6 @@ namespace dTools
         public static List<string> GetAllSectionNames(string path)
         {
             List<string> sectionList = new List<string>();
-            int MAX_BUFFER = 32767;
             IntPtr pReturnedString = Marshal.AllocCoTaskMem(MAX_BUFFER);
             int bytesReturned = GetPrivateProfileSectionNames(pReturnedString, MAX_BUFFER, path);
             if (bytesReturned != 0)
@@ -111,7 +112,7 @@ namespace dTools
         /// <returns></returns>
         public static int GetAllKeyValues(string section, out string[] keys, out string[] values, string path)
         {
-            byte[] b = new byte[65535];//配置节下的所有信息
+            byte[] b = new byte[MAX_BUFFER];//配置节下的所有信息
             GetPrivateProfileSection(section, b, b.Length, path);
             string s = System.Text.Encoding.Default.GetString(b);//配置信息
             string[] tmp = s.Split((char)0);//Key\Value信息
@@ -161,7 +162,7 @@ namespace dTools
         /// <returns></returns>
         public static int GetAllKeys(string section, out string[] keys, string path)
         {
-            byte[] b = new byte[65535];
+            byte[] b = new byte[MAX_BUFFER];
 
             GetPrivateProfileSection(section, b, b.Length, path);
             string s = System.Text.Encoding.Default.GetString(b);
@@ -200,7 +201,7 @@ namespace dTools
         public static List<string> GetAllKeys(string section, string path)
         {
             List<string> keyList = new List<string>();
-            byte[] b = new byte[65535];
+            byte[] b = new byte[MAX_BUFFER];
             GetPrivateProfileSection(section, b, b.Length, path);
             string s = System.Text.Encoding.Default.GetString(b);
             string[] tmp = s.Split((char)0);
@@ -233,7 +234,7 @@ namespace dTools
         public static List<string> GetAllValues(string section, string path)
         {
             List<string> keyList = new List<string>();
-            byte[] b = new byte[65535];
+            byte[] b = new byte[MAX_BUFFER];
             GetPrivateProfileSection(section, b, b.Length, path);
             string s = System.Text.Encoding.Default.GetString(b);
             string[] tmp = s.Split((char)0);
