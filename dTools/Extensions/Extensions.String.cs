@@ -1702,7 +1702,7 @@ namespace dTools
         /// <param name="encoding"></param>
         /// <param name="namespaces">命名空间设置,XmlQualifiedName , 用去去除 xmlns:xsi xmlns:xsd等属性</param>
         /// <returns></returns>
-        public static string ToXml<T>(this T obj, Encoding encoding, XmlSerializerNamespaces namespaces = null)
+        public static string ToXml<T>(this T obj, Encoding encoding, XmlSerializerNamespaces namespaces)
         {
             //using (StringWriter sw = new StringWriter())
             //{
@@ -1717,9 +1717,6 @@ namespace dTools
             //    new XmlQualifiedName[] {
             //        new XmlQualifiedName(string.Empty, "aa")
             //    });
-
-            if (namespaces == null)
-                namespaces = new XmlSerializerNamespaces();
 
             XmlSerializer xs = new XmlSerializer(obj.GetType());
             using (MemoryStream memoryStream = new MemoryStream())
