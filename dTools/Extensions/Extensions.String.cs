@@ -1744,5 +1744,23 @@ namespace dTools
             }
         }
         #endregion
+
+        #region  用于Mapping映射 IndexOfStartWith
+        /// <summary>
+        /// 已find开始
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="find"></param>
+        /// <param name="defaultvalue">找不到返回值</param>
+        /// <returns></returns>
+        public static int IndexOfStartWith(this string[] @array, string find, int defaultvalue = 0)
+        {
+            for (int i = 0; i < @array.Length; i++)
+                if (@array[i].StartsWith(find, System.StringComparison.OrdinalIgnoreCase))
+                    return i;
+            return defaultvalue;
+        }
+        #endregion
+
     }
 }
