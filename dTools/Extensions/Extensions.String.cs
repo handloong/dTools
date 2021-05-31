@@ -1699,8 +1699,10 @@ namespace dTools
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="obj"></param>
+        /// <param name="encoding"></param>
+        /// <param name="namespaces">命名空间设置,XmlQualifiedName , 用去去除 xmlns:xsi xmlns:xsd等属性</param>
         /// <returns></returns>
-        public static string ToXml<T>(this T obj)
+        public static string ToXml<T>(this T obj, Encoding encoding, XmlSerializerNamespaces namespaces = null)
         {
             //using (StringWriter sw = new StringWriter())
             //{
@@ -1711,20 +1713,24 @@ namespace dTools
             //    return sw.ToString();
             //}
             //去掉要结点的 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" 属性
-            XmlSerializerNamespaces _namespaces = new XmlSerializerNamespaces(
-                new XmlQualifiedName[] {
-                    new XmlQualifiedName(string.Empty, "aa")
-                });
+            //XmlSerializerNamespaces _namespaces = new XmlSerializerNamespaces(
+            //    new XmlQualifiedName[] {
+            //        new XmlQualifiedName(string.Empty, "aa")
+            //    });
+
+            if (namespaces == null)
+                namespaces = new XmlSerializerNamespaces();
+
             XmlSerializer xs = new XmlSerializer(obj.GetType());
             using (MemoryStream memoryStream = new MemoryStream())
             {
                 XmlWriterSettings settings = new XmlWriterSettings()
                 {
-                    Encoding = Encoding.UTF8,
+                    Encoding = encoding,
                 };
                 using (XmlWriter writer = XmlWriter.Create(memoryStream, settings))
                 {
-                    xs.Serialize(writer, obj, _namespaces);
+                    xs.Serialize(writer, obj, namespaces);
                 }
                 return Encoding.UTF8.GetString(memoryStream.ToArray());
             }
