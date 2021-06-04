@@ -96,26 +96,36 @@ namespace dTools
 
         #region 获取指定文件夹下的所有文件
         /// <summary>
-        /// 递归获取指定文件夹下的所有文件
+        /// 获取指定文件夹下的所有文件,包括里面的嵌套文件夹
         /// </summary>
-        /// <param name="directory"></param>
-        /// <param name="fileInfos">文件夹不存在 fileInfos = new List<FileInfo>()</param>
-        /// <param name="searchPattern"></param>
-        public static void GetDirectoryAllFiles(string directory, out List<FileInfo> fileInfos, string searchPattern = "*.*")
+        /// <param name="directory">文件夹不存在</param>
+        /// <param name="searchFilePattern">文件匹配符 多个使用|分割,例如 *.dat|*.txt 默认*.*</param>
+        public static List<string> GetDirectoryAllFiles(string directory,
+            string searchFilePattern = "*.*")
         {
-            fileInfos = new List<FileInfo>();
+            var fileFullNames = new List<string>();
             if (Directory.Exists(directory))
             {
-                var directoryInfo = new DirectoryInfo(directory);
-                foreach (FileInfo info in directoryInfo.GetFiles(searchPattern))
-                {
-                    fileInfos.Add(info);
-                }
-                foreach (DirectoryInfo info in directoryInfo.GetDirectories())
-                {
-                    GetDirectoryAllFiles(info.FullName, out fileInfos, searchPattern);
-                }
+                var files = searchFilePattern
+                    .Split('|')
+                    .SelectMany(sp => Directory.EnumerateFiles(directory, sp, SearchOption.AllDirectories));
+
+                return files.ToList();
+
+                //不使用递归
+
+                //fileFullNames.AddRange(files);
+
+                //var directories = searchFolderPattern
+                //     .Split('|')
+                //     .SelectMany(sp => Directory.EnumerateDirectories(directory, sp));
+
+                //foreach (var dir in directories)
+                //{
+                //    fileFullNames.AddRange(GetDirectoryAllFiles(dir, searchFilePattern, searchFolderPattern));
+                //}
             }
+            return fileFullNames;
         }
         #endregion
     }

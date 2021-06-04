@@ -16,19 +16,26 @@ namespace dTools.Console
 
         static void Main(string[] args)
         {
-            var file = @"C:\Users\H12727182\Desktop\TEST\T1F3L1.xml";
+
+
+            var path = @"C:\Users\H12727182\Desktop\TEST";
+
+           var files= FileHelper.GetDirectoryAllFiles(path, "*.txt|*.dat");
+
+
             for (int i = 0; i < 99999; i++)
             {
-                var fff = new FileInfo(file);
+                var fff = new FileInfo(path);
             }
             int a = 1;
             for (int i = 45803; i < 99999; i++)
             {
                 System.Console.WriteLine(i);
-                File.Copy(file, $@"C:\Users\H12727182\Desktop\TEST\T1F3L{i}.xml");
+                File.Copy(path, $@"C:\Users\H12727182\Desktop\TEST\T1F3L{i}.xml");
             }
 
-            var f= FileHelper.GetDirectoryAllFiles(@"C:\AMATAAA");
+
+
             var json = new
             {
                 name = "张三",
