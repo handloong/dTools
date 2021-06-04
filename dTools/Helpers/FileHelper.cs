@@ -93,5 +93,30 @@ namespace dTools
             }
         }
         #endregion
+
+        #region 获取指定文件夹下的所有文件
+        /// <summary>
+        /// 递归获取指定文件夹下的所有文件
+        /// </summary>
+        /// <param name="directory"></param>
+        /// <param name="fileInfos">文件夹不存在 fileInfos = new List<FileInfo>()</param>
+        /// <param name="searchPattern"></param>
+        public static void GetDirectoryAllFiles(string directory, out List<FileInfo> fileInfos, string searchPattern = "*.*")
+        {
+            fileInfos = new List<FileInfo>();
+            if (Directory.Exists(directory))
+            {
+                var directoryInfo = new DirectoryInfo(directory);
+                foreach (FileInfo info in directoryInfo.GetFiles(searchPattern))
+                {
+                    fileInfos.Add(info);
+                }
+                foreach (DirectoryInfo info in directoryInfo.GetDirectories())
+                {
+                    GetDirectoryAllFiles(info.FullName, out fileInfos, searchPattern);
+                }
+            }
+        }
+        #endregion
     }
 }
