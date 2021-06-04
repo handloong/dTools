@@ -58,6 +58,7 @@
     <Compile Include="Extensions\Extensions.Validate.cs" />
     <Compile Include="Helpers\CmdHelper.cs" />
     <Compile Include="Helpers\Config.cs" />
+    <Compile Include="Helpers\EasyConf.cs" />
     <Compile Include="Helpers\FtpHelper.cs" />
     <Compile Include="Helpers\INIHelper.cs" />
     <Compile Include="Helpers\PrimaryScreen.cs" />

@@ -12,15 +12,26 @@ namespace dTools.Console
     class Program
     {
         public string Name { get; set; }
-        public int Age { get; set; }
 
+        public string Path { get; set; }
+
+        public int Age { get; set; }
+        public int Money { get; set; }
+        public bool Open { get; set; }
+        public decimal AA { get; set; }
         static void Main(string[] args)
         {
+            var p = EasyConf.Read<Program>();
+            p.Name = "王五-1";
+            p.Age = 222;
+            p.AA = 111001.12312343434M;
+            p.Path = @"D:\DevCode\Git\dTools\dTools\dTools.Console\bin\Debug";
 
+            EasyConf.Write(p);
 
             var path = @"C:\Users\H12727182\Desktop\TEST";
 
-           var files= FileHelper.GetDirectoryAllFiles(path, "*.txt|*.dat");
+            var files = FileHelper.GetDirectoryAllFiles(path, "*.txt|*.dat");
 
 
             for (int i = 0; i < 99999; i++)
@@ -31,7 +42,7 @@ namespace dTools.Console
             for (int i = 45803; i < 99999; i++)
             {
                 System.Console.WriteLine(i);
-                File.Copy(path, $@"C:\Users\H12727182\Desktop\TEST\T1F3L{i}.xml");
+                //File.Copy(path, $@"C:\Users\H12727182\Desktop\TEST\T1F3L{i}.xml");
             }
 
 

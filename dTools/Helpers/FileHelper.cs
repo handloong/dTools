@@ -100,17 +100,16 @@ namespace dTools
         /// </summary>
         /// <param name="directory">文件夹不存在</param>
         /// <param name="searchFilePattern">文件匹配符 多个使用|分割,例如 *.dat|*.txt 默认*.*</param>
-        public static List<string> GetDirectoryAllFiles(string directory,
+        public static List<FileInfo> GetDirectoryAllFiles(string directory,
             string searchFilePattern = "*.*")
         {
-            var fileFullNames = new List<string>();
             if (Directory.Exists(directory))
             {
                 var files = searchFilePattern
                     .Split('|')
                     .SelectMany(sp => Directory.EnumerateFiles(directory, sp, SearchOption.AllDirectories));
 
-                return files.ToList();
+                return files.Select(x => new FileInfo(x)).ToList();
 
                 //不使用递归
 
@@ -125,7 +124,7 @@ namespace dTools
                 //    fileFullNames.AddRange(GetDirectoryAllFiles(dir, searchFilePattern, searchFolderPattern));
                 //}
             }
-            return fileFullNames;
+            return new List<FileInfo>();
         }
         #endregion
     }
