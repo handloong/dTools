@@ -116,5 +116,50 @@ namespace dTools
                 }
             }
         }
+
+        /// <summary>
+        /// Image 压缩
+        /// </summary>
+        /// <param name="this"></param>
+        /// <param name="value">1-100 越大质量越小</param>
+        /// <returns></returns>
+        public static Image Zip(this Image @this, long value)
+        {
+            using (Bitmap bitmap = new Bitmap(@this))
+            {
+                ImageCodecInfo jpgEncoder = GetEncoder(ImageFormat.Jpeg);
+
+                // Create an Encoder object based on the GUID  
+                // for the Quality parameter category.  
+                System.Drawing.Imaging.Encoder myEncoder =
+                    System.Drawing.Imaging.Encoder.Quality;
+
+                // Create an EncoderParameters object.  
+                // An EncoderParameters object has an array of EncoderParameter  
+                // objects. In this case, there is only one  
+                // EncoderParameter object in the array.  
+                EncoderParameters myEncoderParameters = new EncoderParameters(1);
+
+                EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, value);
+
+                MemoryStream memory = new MemoryStream();
+                myEncoderParameters.Param[0] = myEncoderParameter;
+                bitmap.Save(memory, jpgEncoder, myEncoderParameters);
+                return Image.FromStream(memory);
+            }
+
+        }
+        private static ImageCodecInfo GetEncoder(ImageFormat format)
+        {
+            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
+            foreach (ImageCodecInfo codec in codecs)
+            {
+                if (codec.FormatID == format.Guid)
+                {
+                    return codec;
+                }
+            }
+            return null;
+        }
     }
 }
