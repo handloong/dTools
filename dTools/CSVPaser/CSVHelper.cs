@@ -15,7 +15,7 @@ namespace dTools
         /// <typeparam name="T">单个T</typeparam>
         /// <param name="allLines">所有行,包含头部</param>
         /// <param name="split">默认,分割</param>
-        /// <returns>集合T</returns>
+        /// <returns>集合T,无数据返回 new List<T>() </returns>
         public static List<T> Paser<T>(string[] allLines, char split = ',')
         {
             List<T> retval = new List<T>();
@@ -29,20 +29,21 @@ namespace dTools
 
             var mapping = GetMapping(type, allLines[beginLine], split);
 
+            //实体属性
+            var properties = type.GetProperties();
+
             for (int i = 0; i < dataLines.Count; i++)
             {
                 var v = dataLines[i].Split(split);
                 var obj = Activator.CreateInstance(type);
-                var properties = type.GetProperties();
                 foreach (var item in properties)
                 {
                     var properName = item.Name.ToUpper();
 
-                    //Mapping 包含 类属性
-                    if (mapping.ContainsKey(properName))
+                    //Mapping 包含 类属性 && Mapping 的索引不等于-1 ,GetMapping如果找不到设置的是-1
+                    if (mapping.ContainsKey(properName) && mapping[properName] != -1)
                     {
                         object value = new object();
-                        //Type
                         var vv = v[mapping[properName]];
                         if (item.PropertyType == typeof(DateTime))
                         {
@@ -133,7 +134,7 @@ namespace dTools
             var columns = GetPropertyAndColumnName(type);
             foreach (var c in columns)
             {
-                retval[c.Key] = bondHeader.IndexOfStartWith(c.Value.ToUpper());
+                retval[c.Key] = bondHeader.IndexOfStartWith(c.Value.ToUpper(), -1);
             }
             return retval;
         }

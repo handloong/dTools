@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace dTools
@@ -127,5 +128,161 @@ namespace dTools
             return new List<FileInfo>();
         }
         #endregion
+
+        #region CreateDirectory
+        /// <summary>
+        /// 如果目录不存在则创建一个目录
+        /// </summary>
+        /// <param name="path"></param>
+        public static void CreateDirectory(string path)
+        {
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+        }
+        /// <summary>
+        /// 如果目录不存在则创建一个目录
+        /// </summary>
+        /// <param name="paths"></param>
+        public static void CreateDirectory(string[] paths)
+        {
+            var full = Path.Combine(paths);
+            if (!Directory.Exists(full))
+            {
+                CreateDirectory(full);
+            }
+        }
+        #endregion
+
+        #region Path.Combine 并自动创建Combine后的文件夹
+        /// <summary>
+        /// Path.Combine 并自动创建Combine后的文件夹
+        /// </summary>
+        /// <param name="path1"></param>
+        /// <param name="path2"></param>
+        /// <returns></returns>
+        public static string Combine(string path1, string path2)
+        {
+            var ret = Path.Combine(path1, path2);
+            CreateDirectory(ret);
+            return ret;
+        }
+        /// <summary>
+        /// Path.Combine 并自动创建Combine后的文件夹
+        /// </summary>
+        /// <param name="path1"></param>
+        /// <param name="path2"></param>
+        /// <param name="path3"></param>
+        /// <returns></returns>
+        public static string Combine(string path1, string path2, string path3)
+        {
+            var ret = Path.Combine(path1, path2, path3);
+            CreateDirectory(ret);
+            return ret;
+        }
+        /// <summary>
+        /// Path.Combine 并自动创建Combine后的文件夹
+        /// </summary>
+        /// <param name="path1"></param>
+        /// <param name="path2"></param>
+        /// <param name="path3"></param>
+        /// <param name="path4"></param>
+        /// <returns></returns>
+        public static string Combine(string path1, string path2, string path3, string path4)
+        {
+            var ret = Path.Combine(path1, path2, path3, path4);
+            CreateDirectory(ret);
+            return ret;
+        }
+        /// <summary>
+        /// Path.Combine 并自动创建Combine后的文件夹
+        /// </summary>
+        /// <param name="paths"></param>
+        /// <returns></returns>
+        public static string Combine(params string[] paths)
+        {
+            var ret = Path.Combine(paths);
+            CreateDirectory(ret);
+            return ret;
+        }
+        #endregion
+
+        #region GetFiles
+        /// <summary>
+        /// 获取路径下的所有文件,如果目录不存在返回空集合(不是null)
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static List<FileInfo> GetFiles(string path)
+        {
+            if (!Directory.Exists(path))
+            {
+                return new List<FileInfo>();
+            }
+            return new DirectoryInfo(path).GetFiles().ToList();
+        }
+        #endregion
+
+        /// <summary>
+        /// 转移文件
+        /// </summary>
+        /// <param name="fileInfo">要转移的文件</param>
+        /// <param name="path1"></param>
+        /// <param name="path2"></param>
+        /// <param name="path3"></param>
+        /// <param name="processFlag"></param>
+        /// <param name="zipFile">压缩转移后的文件</param>
+        /// <param name="zipFileAdd">压缩后文件后面是否添加GUID默认4位</param>
+        /// <param name="zipDelete">删除转移后的文件</param>
+        /// <param name="moveOkSleep">转移->压缩过程睡眠毫秒数</param>
+        /// <param name="OnException">出现异常</param>
+        public static void MoveFile(FileInfo fileInfo,
+            string path1 = "AppDomain.CurrentDomain.BaseDirectory",
+            string path2 = "BackFile",
+            string path3 = "Date:yyyy-MM",
+            string processFlag = "Successful",
+            bool zipFile = true,
+            bool zipFileAdd = true,
+            bool zipDelete = true,
+            int moveOkSleep = 1000,
+            Action<Exception> OnException = null
+            )
+        {
+            try
+            {
+                if (path1.IsEmpty() || path1 == "AppDomain.CurrentDomain.BaseDirectory")
+                    path1 = AppDomain.CurrentDomain.BaseDirectory;
+
+                if (path3.StartsWith("Date:"))
+                {
+                    path3 = DateTime.Now.ToString(path3.Split(':')[1]);
+                }
+                var back = Combine(path1, path2, path3, processFlag);
+                var moved = Path.Combine(back, fileInfo.Name);
+                File.Move(fileInfo.FullName, moved);
+                Thread.Sleep(moveOkSleep);//保证文件转移完毕
+
+                if (zipFile && zipFileAdd)
+                {
+                    var add = ".zip";
+                    if (zipFileAdd)
+                    {
+                        add = $".{Guid.NewGuid().ToString().Substring(0, 4).ToLower()}.zip";
+                    }
+                    ZipHelper.ZipFile(moved, moved + add);
+                }
+
+                if (zipFile && zipDelete)
+                {
+                    Thread.Sleep(moveOkSleep);
+                    File.Delete(moved);
+                }
+            }
+            catch (Exception ex)
+            {
+                OnException?.Invoke(ex);
+            }
+        }
     }
 }

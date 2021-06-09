@@ -23,6 +23,7 @@ namespace dTools
         /// 映射列名 - 给列用
         /// </summary>
         public string Name { get; set; }
+
     }
 
     /// <summary>
