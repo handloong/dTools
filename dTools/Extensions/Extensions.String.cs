@@ -27,6 +27,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Net;
 /****************************
 * [Author] 张强
 * [Date] 2015-10-26
@@ -1765,5 +1766,28 @@ namespace dTools
         }
         #endregion
 
+        #region 如果是IP 获取地址
+        /// <summary>
+        /// 域名转IP
+        /// </summary>
+        /// <param name="this">sh1.k9s.run</param>
+        /// <param name="multiple"></param>
+        /// <returns>异常返回空字符串 如果multiple=true 并且有多个 按照,分割</returns>
+        public static string ToIP(this string @this, bool multiple = false)
+        {
+            try
+            {
+                IPAddress[] IPs = Dns.GetHostAddresses(@this);
+                if (!multiple)
+                    return IPs[0].ToString();
+                else
+                    return string.Join(",", IPs.Select(x => x.ToString()));
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
+        #endregion
     }
 }
