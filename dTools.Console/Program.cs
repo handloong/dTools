@@ -21,58 +21,26 @@ namespace dTools.Console
         public decimal AA { get; set; }
         static void Main(string[] args)
         {
-            var p = EasyConf.Read<Program>();
-            p.Name = "王五-1";
-            p.Age = 222;
-            p.AA = 111001.12312343434M;
-            p.Path = @"D:\DevCode\Git\dTools\dTools\dTools.Console\bin\Debug";
-
-            EasyConf.Write(p);
-
-            var path = @"C:\Users\H12727182\Desktop\TEST";
-
-            var files = FileHelper.GetDirectoryAllFiles(path, "*.txt|*.dat");
-
-
-            for (int i = 0; i < 99999; i++)
-            {
-                var fff = new FileInfo(path);
-            }
-            int a = 1;
-            for (int i = 45803; i < 99999; i++)
-            {
-                System.Console.WriteLine(i);
-                //File.Copy(path, $@"C:\Users\H12727182\Desktop\TEST\T1F3L{i}.xml");
-            }
-
-
-
-            var json = new
-            {
-                name = "张三",
-                age = 18
-            }.ToJson();
-
-            System.Console.WriteLine(json);
-
-            var entity = json.ToObject<Program>();
-
-            System.Console.WriteLine(entity.Name);
-            System.Console.WriteLine(entity.Age);
-
-
-            var name = "";
-
-            if (name.IsEmpty())
-            {
-                System.Console.WriteLine("name 是空");
-            }
-
-            var mail = "3977077343@qq.com";
-            if (mail.IsEmail())
-            {
-                System.Console.WriteLine("邮件格式正确");
-            }
+            //var csv = @"C:\Users\H12727182\Desktop\Serin (2)\AOI OP30 40\X1608_0DVT_SS13_639-14580_OP40_V001_4001_IIII_AH0AQ0541N3CA_20201202_212512.csv";
+            //var csv1 = @"C:\Users\H12727182\Desktop\Serin (2)\Cyber OP10 50 60\Recipe name_OP50_V001_CY01.LotNO.barcode.date.time.R.csv";
+            //var x1608 = CSVHelper.Paser<X1608>(File.ReadAllLines(csv));
         }
+    }
+
+    [CSVHeader(0)]
+    class X1608
+    {
+        [CSVColumn("BoardNo")]
+        public string BoardNo { get; set; }
+
+        [CSVColumn("POS X-")]
+        public string POSTX { get; set; }
+
+
+        [CSVColumn("CompType")]
+        public string 数据库 { get; set; }
+
+        [CSVColumn("DzzDate")]
+        public DateTime? DzzDate { get; set; }
     }
 }
