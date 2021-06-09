@@ -28,11 +28,7 @@ using Newtonsoft.Json.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Net;
-/****************************
-* [Author] 张强
-* [Date] 2015-10-26
-* [Describe] string扩展类
-* **************************/
+
 namespace dTools
 {
     /// <summary>
@@ -687,6 +683,29 @@ namespace dTools
                 return DateTime.ParseExact(@this, format, provider);
             else
                 return DateTime.Parse(@this);
+        }
+
+        /// <summary>
+        /// 自定义格式转换日期字符串,如果格式错误返回当前时间
+        /// </summary>
+        /// <param name="this"></param>
+        /// <param name="format">日期字符串格式化</param>
+        /// <param name="provider">格式化驱动</param>
+        /// <returns></returns>
+        public static DateTime ToDateTimeIFExReturnNow(this string @this, string format, IFormatProvider provider = null)
+        {
+            try
+            {
+                if (!format.IsNullOrEmpty())
+                    return DateTime.ParseExact(@this, format, provider);
+                else
+                    return DateTime.Parse(@this);
+            }
+            catch (Exception)
+            {
+                return DateTime.Now;
+            }
+
         }
         #endregion
 
@@ -1751,7 +1770,7 @@ namespace dTools
 
         #region  用于Mapping映射 IndexOfStartWith
         /// <summary>
-        /// 已find开始
+        /// 用于Mapping映射 IndexOfStartWith 已find开始
         /// </summary>
         /// <param name="array"></param>
         /// <param name="find"></param>

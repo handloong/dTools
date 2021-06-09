@@ -237,7 +237,7 @@ namespace dTools
         /// <param name="zipDelete">删除转移后的文件</param>
         /// <param name="moveOkSleep">转移->压缩过程睡眠毫秒数</param>
         /// <param name="OnException">出现异常</param>
-        public static void MoveFile(FileInfo fileInfo,
+        public static bool MoveFile(FileInfo fileInfo,
             string path1 = "AppDomain.CurrentDomain.BaseDirectory",
             string path2 = "BackFile",
             string path3 = "Date:yyyy-MM",
@@ -278,10 +278,12 @@ namespace dTools
                     Thread.Sleep(moveOkSleep);
                     File.Delete(moved);
                 }
+                return true;
             }
             catch (Exception ex)
             {
                 OnException?.Invoke(ex);
+                return false;
             }
         }
     }

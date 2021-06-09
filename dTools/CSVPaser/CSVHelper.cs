@@ -43,37 +43,40 @@ namespace dTools
                     //Mapping 包含 类属性 && Mapping 的索引不等于-1 ,GetMapping如果找不到设置的是-1
                     if (mapping.ContainsKey(properName) && mapping[properName] != -1)
                     {
-                        object value = new object();
-                        var vv = v[mapping[properName]];
-                        if (item.PropertyType == typeof(DateTime))
+                        if (v.Length >= mapping.Count())
                         {
-                            value = vv.ToDate();
+                            object value = new object();
+                            var vv = v[mapping[properName]];
+                            if (item.PropertyType == typeof(DateTime))
+                            {
+                                value = vv.ToDate();
+                            }
+                            else if (item.PropertyType.FullName.StartsWith("System.Nullable`1[[System.DateTime"))
+                            {
+                                value = vv.ToDate();
+                            }
+                            else if (item.PropertyType == typeof(int))
+                            {
+                                value = vv.ToInt();
+                            }
+                            else if (item.PropertyType == typeof(double))
+                            {
+                                value = vv.ToDouble();
+                            }
+                            else if (item.PropertyType == typeof(decimal))
+                            {
+                                value = vv.ToDecimal();
+                            }
+                            else if (item.PropertyType == typeof(string))
+                            {
+                                value = Convert.ToString(vv);
+                            }
+                            else
+                            {
+                                value = Convert.ChangeType(vv, item.PropertyType);
+                            }
+                            item.SetValue(obj, value);
                         }
-                        else if (item.PropertyType.FullName.StartsWith("System.Nullable`1[[System.DateTime"))
-                        {
-                            value = vv.ToDate();
-                        }
-                        else if (item.PropertyType == typeof(int))
-                        {
-                            value = vv.ToInt();
-                        }
-                        else if (item.PropertyType == typeof(double))
-                        {
-                            value = vv.ToDouble();
-                        }
-                        else if (item.PropertyType == typeof(decimal))
-                        {
-                            value = vv.ToDecimal();
-                        }
-                        else if (item.PropertyType == typeof(string))
-                        {
-                            value = Convert.ToString(vv);
-                        }
-                        else
-                        {
-                            value = Convert.ChangeType(vv, item.PropertyType);
-                        }
-                        item.SetValue(obj, value);
                     }
                 }
                 var t = (T)obj;
